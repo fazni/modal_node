@@ -1,0 +1,5 @@
+name: Modal node
+type: module
+description: Drupal 8 modal node exemple
+core: 8.x
+package: D8

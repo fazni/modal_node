@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Contains modal_node.module.
+ */
+
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
+
+/**
+ * Implements hook_help().
+ */
+function modal_node_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the modal_node module.
+    case 'help.page.modal_node':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Drupal 8 modal node exemple') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_view().
+ */
+function modal_node_node_view(
+  array &$build,
+  EntityInterface $entity,
+  EntityViewDisplayInterface $display,
+  $view_mode
+) {
+  if ($view_mode == 'teaser') {
+    $nid = $entity->id();
+    $link_url = Url::fromRoute('modal_node.modal', ['nid' => $nid]);
+    $link_url->setOptions(
+      [
+        'attributes' => [
+          'class' => [
+            'use-ajax',
+            'button',
+            'button--small',
+          ],
+          'data-dialog-type' => 'modal',
+          'data-dialog-options' => Json::encode(['width' => 200]),
+        ],
+      ]
+    );
+    $build['modal_node_ajax_link'] = [
+      '#markup' => Link::fromTextAndUrl(t('Read more'), $link_url)
+        ->toString(),
+      '#attached' => ['library' => ['core/drupal.dialog.ajax']],
+      '#weight' => 100,
+    ];
+  }
+}

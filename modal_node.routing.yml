@@ -1,0 +1,7 @@
+modal_node.modal:
+  path: 'modal-node/view/{nid}'
+  defaults:
+    _title: 'Modal node'
+    _controller: '\Drupal\modal_node\Controller\ModalNodeController::modal_node'
+  requirements:
+    _permission: 'access content'
